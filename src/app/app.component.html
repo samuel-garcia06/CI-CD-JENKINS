@@ -1,0 +1,85 @@
+<main class="page">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">OPTATIVA · DEVOPS · PRACTICA 7</p>
+      <h1>{{ title }}</h1>
+      <p class="lead">{{ subtitle }}</p>
+
+      <div class="hero-actions">
+        <a class="button primary" href="#pipeline">Ver pipeline</a>
+        <a class="button secondary" href="#entrega">Checklist de entrega</a>
+      </div>
+    </div>
+
+    <aside class="status-panel">
+      <p class="status-label">Estado esperado del pipeline</p>
+      <strong>READY FOR DEPLOY</strong>
+      <ul>
+        <li>Analisis estatico antes del build</li>
+        <li>Cobertura y artefactos publicados</li>
+        <li>Despliegue remoto con comprobacion final</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="metrics">
+    @for (metric of metrics; track metric.label) {
+      <article class="metric-card">
+        <p class="metric-value">{{ metric.value }}</p>
+        <h2>{{ metric.label }}</h2>
+        <p>{{ metric.detail }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="content-grid" id="pipeline">
+    <article class="card">
+      <div class="section-heading">
+        <p class="kicker">Pipeline</p>
+        <h2>Flujo automatizado</h2>
+      </div>
+
+      <div class="timeline">
+        @for (stage of stages; track stage.name; let index = $index) {
+          <div class="timeline-item">
+            <span class="timeline-index">0{{ index + 1 }}</span>
+            <div>
+              <h3>{{ stage.name }}</h3>
+              <p>{{ stage.summary }}</p>
+              <small>{{ stage.evidence }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="card accent-card" id="entrega">
+      <div class="section-heading">
+        <p class="kicker">Defensa</p>
+        <h2>Puntos que elevan la nota</h2>
+      </div>
+
+      <div class="checklist">
+        @for (checkpoint of checkpoints; track checkpoint.title) {
+          <div class="check-item">
+            <h3>{{ checkpoint.title }}</h3>
+            <p>{{ checkpoint.description }}</p>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="card tools-card">
+    <div class="section-heading">
+      <p class="kicker">Stack</p>
+      <h2>Tecnologias integradas en la practica</h2>
+    </div>
+
+    <div class="tag-cloud">
+      @for (tool of stack; track tool) {
+        <span>{{ tool }}</span>
+      }
+    </div>
+  </section>
+</main>

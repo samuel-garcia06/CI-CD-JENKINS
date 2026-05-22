@@ -1,0 +1,50 @@
+:root {
+  color-scheme: light;
+  --bg: #f4efe7;
+  --panel: rgba(255, 255, 255, 0.8);
+  --text: #18212f;
+  --muted: #4d5766;
+  --accent: #c46a2d;
+  --accent-dark: #8f4617;
+  --border: rgba(24, 33, 47, 0.09);
+  --font-body: "Space Grotesk", sans-serif;
+  --font-display: "Instrument Serif", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background:
+    radial-gradient(circle at top left, rgba(196, 106, 45, 0.2), transparent 28%),
+    radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.55), transparent 22%),
+    linear-gradient(135deg, #f3ede2 0%, #e7dcc9 100%);
+  color: var(--text);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent);
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(196, 106, 45, 0.24);
+}

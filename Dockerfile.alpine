@@ -1,0 +1,18 @@
+FROM node:20-alpine AS build
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+FROM nginx:1.27-alpine
+LABEL maintainer="Samuel"
+ENV NGINX_PORT=80
+RUN apk add --no-cache wget && rm -rf /usr/share/nginx/html/* && mkdir -p /var/cache/nginx /var/run
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/angular-jenkins-ci-cd/browser /usr/share/nginx/html
+VOLUME ["/var/cache/nginx"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
