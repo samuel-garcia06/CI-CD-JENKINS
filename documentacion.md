@@ -11,7 +11,6 @@ La practica consiste en un frontend Angular desplegable con Nginx, automatizado 
 ## Herramientas utilizadas
 
 - Jenkins como orquestador principal.
-- GitHub como repositorio remoto.
 - Angular 21 para el software base.
 - ESLint para analisis estatico.
 - Karma y Jasmine para pruebas unitarias y cobertura.
@@ -23,7 +22,7 @@ La practica consiste en un frontend Angular desplegable con Nginx, automatizado 
 
 ### 1. Control de versiones
 
-- Repositorio remoto en GitHub.
+- Repositorio remoto.
 - Uso recomendado de ramas para desarrollo e integracion.
 - Commits descriptivos y frecuentes.
 - Ejecucion automatica del pipeline al detectar `push`.
@@ -84,7 +83,6 @@ Tras el despliegue se ejecuta [`scripts/ci/post-deploy-check.sh`](/home/samuel/E
 Se cubren varios disparadores:
 
 - manual
-- `githubPush()`
 - `cron('H 3 * * 1-5')`
 - `upstream()` como trigger adicional
 
@@ -141,7 +139,6 @@ Objetivo: explicar toda la practica en menos de 10 minutos, enseñando evidencia
 
 Deja abiertas estas ventanas o pestañas:
 
-- repositorio remoto en GitHub
 - Jenkins con el job principal
 - configuracion del pipeline o pantalla de parametros
 - Docker Hub con las dos imagenes
@@ -181,25 +178,6 @@ Que decir:
 
 "En la estructura del proyecto, el archivo mas importante es el Jenkinsfile, donde se define el pipeline completo. Ademas, tengo dos Dockerfiles distintos para cumplir el requisito de generar dos imagenes diferentes con el mismo software."
 
-### 1:40 - 2:30 | Control de versiones y repositorio remoto
-
-Que enseñar:
-
-- repositorio GitHub
-- ramas
-- historial de commits
-
-Que decir:
-
-"Todo el proyecto esta versionado en un repositorio remoto. Aqui puedo enseñar el historial de commits descriptivos y el uso de ramas para desarrollo e integracion. El pipeline se integra con este repositorio y se ejecuta automaticamente cuando detecta cambios mediante `push`."
-
-Importante nombrar:
-
-- repositorio remoto
-- commits frecuentes y descriptivos
-- uso de ramas
-- integracion de cambios
-
 ### 2:30 - 3:20 | Disparadores y automatizacion
 
 Que enseñar:
@@ -210,7 +188,7 @@ Que enseñar:
 
 Que decir:
 
-"El sistema demuestra varios disparadores de ejecucion, que es uno de los requisitos del enunciado. Tengo ejecucion manual desde Jenkins, ejecucion automatica por `push` con `githubPush()`, ejecucion periodica con `cron()` y un disparador adicional mediante `upstream()`, que permite encadenar proyectos."
+"El sistema demuestra varios disparadores de ejecucion, que es uno de los requisitos del enunciado. Tengo ejecucion manual desde Jenkins, ejecucion automatica por cambios en el repositorio, ejecucion periodica con `cron()` y un disparador adicional mediante `upstream()`, que permite encadenar proyectos."
 
 "Ademas, el pipeline usa parametros de ejecucion como el entorno de despliegue, la etiqueta de imagen, la URL de validacion y la activacion o no del despliegue automatico."
 
@@ -339,7 +317,6 @@ Que decir:
 ## Checklist final para no olvidarte de nada
 
 - explicar que usas Jenkins como herramienta CI/CD
-- enseñar el repositorio remoto
 - enseñar ramas y commits
 - enseñar triggers manual, push, cron y otro adicional
 - enseñar parametros del pipeline
@@ -394,25 +371,6 @@ Explica:
 - que el software es pequeno pero funcional, como pide el enunciado
 - que la app sirve para demostrar visualmente el pipeline
 - que has mejorado un poco la interfaz para que la practica se vea mas trabajada
-
-### 3. Repositorio remoto, ramas y commits
-
-Enseña:
-
-- el repositorio en GitHub
-- la pestaña de ramas
-- el historial de commits
-
-Como apoyo:
-
-- [documentacion.md](/home/samuel/Escritorio/CI-CD/documentacion.md:22)
-
-Explica:
-
-- que todo esta bajo control de versiones en remoto
-- que has usado ramas
-- que los commits son descriptivos y frecuentes
-- que Jenkins esta integrado con el repositorio
 
 ### 4. Herramienta CI/CD elegida
 
@@ -688,17 +646,16 @@ Explica:
 1. `README.md`
 2. web Angular funcionando
 3. `app.component.ts` y `app.component.html`
-4. GitHub con ramas y commits
-5. Jenkins job principal
-6. `Jenkinsfile`
-7. `package.json` y `.eslintrc.json`
-8. reporte de cobertura
-9. `Dockerfile.alpine` y `Dockerfile.debian`
-10. Docker Hub
-11. `docker-compose.yml` y `remote-deploy.sh`
-12. web desplegada y `/health`
-13. `post-deploy-check.sh` y reporte
-14. correo de notificacion
+4. Jenkins job principal
+5. `Jenkinsfile`
+6. `package.json` y `.eslintrc.json`
+7. reporte de cobertura
+8. `Dockerfile.alpine` y `Dockerfile.debian`
+9. Docker Hub
+10. `docker-compose.yml` y `remote-deploy.sh`
+11. web desplegada y `/health`
+12. `post-deploy-check.sh` y reporte
+13. correo de notificacion
 
 ## Consejo final
 
@@ -750,16 +707,6 @@ Di:
 
 "Todo el proyecto esta bajo control de versiones en un repositorio remoto. He trabajado con ramas, commits descriptivos e integracion de cambios."
 
-Enseña:
-
-- GitHub: repositorio principal
-- GitHub: ramas
-- GitHub: historial de commits
-
-Para que sirve:
-
-- GitHub: sirve como repositorio remoto y como origen de los cambios que disparan Jenkins.
-
 ### 4. Herramienta CI/CD elegida
 
 Di:
@@ -780,7 +727,7 @@ Para que sirve:
 
 Di:
 
-"El pipeline usa parametros de ejecucion y varios disparadores, como ejecucion manual, push, cron y un trigger adicional por proyecto upstream."
+"El pipeline usa parametros de ejecucion y varios disparadores, como ejecucion manual, cambios en el repositorio, cron y un trigger adicional por proyecto upstream."
 
 Enseña:
 

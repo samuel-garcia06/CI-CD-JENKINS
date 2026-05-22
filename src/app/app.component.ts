@@ -78,7 +78,7 @@ export class AppComponent {
   checkpoints: DeliveryCheckpoint[] = [
     {
       title: 'Repositorio remoto y ramas',
-      description: 'La practica esta preparada para integrarse con GitHub y defender un flujo con ramas, merges y ejecucion por push.'
+      description: 'La practica esta preparada para trabajar con repositorio remoto y defender un flujo con ramas, merges y ejecucion por cambios.'
     },
     {
       title: 'Parametros y notificaciones',

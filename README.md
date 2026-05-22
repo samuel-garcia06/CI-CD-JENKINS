@@ -10,7 +10,7 @@
 
 ## Flujo del pipeline
 
-1. `push` a GitHub o ejecucion manual en Jenkins.
+1. cambio en el repositorio o ejecucion manual en Jenkins.
 2. Checkout e instalacion de dependencias con `npm ci`.
 3. Analisis estatico con `npm run lint`.
 4. Pruebas unitarias con cobertura mediante `npm run test:ci`.
@@ -24,7 +24,7 @@
 ## Disparadores soportados
 
 - Ejecucion manual.
-- `githubPush()`.
+- cambios en el repositorio.
 - `cron()`.
 - `upstream()`.
 
