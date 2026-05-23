@@ -6,6 +6,7 @@ pipeline {
     REMOTE_APP_DIR = "/opt/angular-jenkins"
     CURRENT_STAGE = "Inicializacion"
     RESOLVED_TAG = ""
+    DEFAULT_EMAIL_TO = "samuelgarciaayala@gmail.com"
   }
 
   options {
@@ -19,6 +20,7 @@ pipeline {
     string(name: 'IMAGE_TAG', defaultValue: '', description: 'Tag manual opcional. Si se deja vacio se usa el numero de build.')
     string(name: 'APP_URL', defaultValue: 'http://tu-servidor', description: 'URL publica para las pruebas post-despliegue.')
     string(name: 'POST_DEPLOY_JOB', defaultValue: '', description: 'Job downstream opcional para verificacion o monitorizacion.')
+    string(name: 'EMAIL_TO', defaultValue: 'samuelgarciaayala@gmail.com', description: 'Correo destinatario para notificaciones de Jenkins.')
     booleanParam(name: 'PUSH_IMAGES', defaultValue: true, description: 'Publicar imagenes en Docker Hub.')
     booleanParam(name: 'DEPLOY_AFTER_BUILD', defaultValue: true, description: 'Desplegar automaticamente tras crear las imagenes.')
   }
@@ -175,7 +177,7 @@ pipeline {
   post {
     success {
       emailext(
-        to: 'samuelgarciaayala@gmail.com',
+        to: params.EMAIL_TO?.trim() ? params.EMAIL_TO.trim() : env.DEFAULT_EMAIL_TO,
         subject: "Jenkins OK: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
         body: """La ejecucion ha finalizado correctamente.
 
@@ -188,7 +190,7 @@ Consola: ${env.BUILD_URL}console
     }
     failure {
       emailext(
-        to: 'samuelgarciaayala@gmail.com',
+        to: params.EMAIL_TO?.trim() ? params.EMAIL_TO.trim() : env.DEFAULT_EMAIL_TO,
         subject: "Jenkins ERROR: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
         body: """La ejecucion ha fallado.
 
