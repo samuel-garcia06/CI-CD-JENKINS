@@ -88,12 +88,13 @@ pipeline {
           env.RESOLVED_TAG = params.IMAGE_TAG?.trim() ? params.IMAGE_TAG.trim() : env.BUILD_NUMBER
         }
         sh '''
+          TAG="${RESOLVED_TAG:-$BUILD_NUMBER}"
           docker build -f Dockerfile.alpine \
             -t ${IMAGE_NAME}:alpine-latest \
-            -t ${IMAGE_NAME}:alpine-${RESOLVED_TAG} .
+            -t ${IMAGE_NAME}:alpine-${TAG} .
           docker build -f Dockerfile.debian \
             -t ${IMAGE_NAME}:debian-latest \
-            -t ${IMAGE_NAME}:debian-${RESOLVED_TAG} .
+            -t ${IMAGE_NAME}:debian-${TAG} .
         '''
       }
     }
@@ -107,10 +108,11 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDS', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
           sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
           sh '''
+            TAG="${RESOLVED_TAG:-$BUILD_NUMBER}"
             docker push ${IMAGE_NAME}:alpine-latest
-            docker push ${IMAGE_NAME}:alpine-${RESOLVED_TAG}
+            docker push ${IMAGE_NAME}:alpine-${TAG}
             docker push ${IMAGE_NAME}:debian-latest
-            docker push ${IMAGE_NAME}:debian-${RESOLVED_TAG}
+            docker push ${IMAGE_NAME}:debian-${TAG}
           '''
         }
       }
@@ -128,7 +130,8 @@ pipeline {
           cp deploy/remote-deploy.sh ${REMOTE_APP_DIR}/deploy/remote-deploy.sh
           cp scripts/ci/post-deploy-check.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
           chmod +x ${REMOTE_APP_DIR}/deploy/remote-deploy.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
-          IMAGE_NAME=${IMAGE_NAME}:alpine-${RESOLVED_TAG} \
+          TAG="${RESOLVED_TAG:-$BUILD_NUMBER}"
+          IMAGE_NAME=${IMAGE_NAME}:alpine-${TAG} \
           REMOTE_APP_DIR=${REMOTE_APP_DIR} \
           APP_ENV=${params.DEPLOY_ENV} \
           APP_PORT=8080 \
@@ -164,7 +167,7 @@ pipeline {
           parameters: [
             string(name: 'APP_URL', value: params.APP_URL),
             string(name: 'DEPLOY_ENV', value: params.DEPLOY_ENV),
-            string(name: 'IMAGE_TAG', value: env.RESOLVED_TAG)
+            string(name: 'IMAGE_TAG', value: env.RESOLVED_TAG ?: env.BUILD_NUMBER)
           ]
       }
     }
