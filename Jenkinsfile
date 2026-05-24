@@ -18,10 +18,10 @@ pipeline {
   parameters {
     choice(name: 'DEPLOY_ENV', choices: ['staging', 'production'], description: 'Entorno objetivo para el despliegue.')
     string(name: 'IMAGE_TAG', defaultValue: '', description: 'Tag manual opcional. Si se deja vacio se usa el numero de build.')
-    string(name: 'APP_URL', defaultValue: 'http://tu-servidor', description: 'URL publica para las pruebas post-despliegue.')
+    string(name: 'APP_URL', defaultValue: 'http://217.182.204.183:8080', description: 'URL publica para las pruebas post-despliegue.')
     string(name: 'POST_DEPLOY_JOB', defaultValue: '', description: 'Job downstream opcional para verificacion o monitorizacion.')
     string(name: 'EMAIL_TO', defaultValue: 'samuelgarciaayala@gmail.com', description: 'Correo destinatario para notificaciones de Jenkins.')
-    booleanParam(name: 'PUSH_IMAGES', defaultValue: true, description: 'Publicar imagenes en Docker Hub.')
+    booleanParam(name: 'PUSH_IMAGES', defaultValue: false, description: 'Publicar imagenes en Docker Hub.')
     booleanParam(name: 'DEPLOY_AFTER_BUILD', defaultValue: true, description: 'Desplegar automaticamente tras crear las imagenes.')
   }
 
@@ -35,7 +35,7 @@ pipeline {
     stage('Checkout') {
       steps {
         script { env.CURRENT_STAGE = 'Checkout' }
-        cleanWs()
+        deleteDir()
         checkout scm
       }
     }
@@ -57,7 +57,7 @@ pipeline {
     stage('Unit Tests') {
       steps {
         script { env.CURRENT_STAGE = 'Unit Tests' }
-        sh 'npm run test:ci'
+        sh 'CHROME_BIN=/usr/bin/google-chrome npm run test:ci'
       }
       post {
         always {
@@ -123,22 +123,19 @@ pipeline {
       }
       steps {
         script { env.CURRENT_STAGE = 'Deploy' }
-        sshPublisher(
-          publishers: [
-            sshPublisherDesc(
-              configName: 'SSH_DEPLOY_CONFIG',
-              transfers: [
-                sshTransfer(
-                  sourceFiles: 'docker-compose.yml,deploy/remote-deploy.sh,scripts/ci/post-deploy-check.sh',
-                  removePrefix: '',
-                  remoteDirectory: "${REMOTE_APP_DIR}",
-                  execCommand: "chmod +x ${REMOTE_APP_DIR}/deploy/remote-deploy.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh && IMAGE_NAME=${IMAGE_NAME}:alpine-${RESOLVED_TAG} REMOTE_APP_DIR=${REMOTE_APP_DIR} APP_ENV=${params.DEPLOY_ENV} ${REMOTE_APP_DIR}/deploy/remote-deploy.sh"
-                )
-              ],
-              verbose: true
-            )
-          ]
-        )
+        sh '''
+          mkdir -p ${REMOTE_APP_DIR}/deploy ${REMOTE_APP_DIR}/scripts/ci
+          cp docker-compose.yml ${REMOTE_APP_DIR}/docker-compose.yml
+          cp deploy/remote-deploy.sh ${REMOTE_APP_DIR}/deploy/remote-deploy.sh
+          cp scripts/ci/post-deploy-check.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
+          chmod +x ${REMOTE_APP_DIR}/deploy/remote-deploy.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
+          IMAGE_NAME=${IMAGE_NAME}:alpine-${RESOLVED_TAG} \
+          REMOTE_APP_DIR=${REMOTE_APP_DIR} \
+          APP_ENV=${params.DEPLOY_ENV} \
+          APP_PORT=8080 \
+          SKIP_PULL=1 \
+          ${REMOTE_APP_DIR}/deploy/remote-deploy.sh
+        '''
       }
     }
 
