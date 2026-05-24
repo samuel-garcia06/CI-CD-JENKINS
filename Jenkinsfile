@@ -129,7 +129,6 @@ pipeline {
           cp docker-compose.yml ${REMOTE_APP_DIR}/docker-compose.yml
           cp deploy/remote-deploy.sh ${REMOTE_APP_DIR}/deploy/remote-deploy.sh
           cp scripts/ci/post-deploy-check.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
-          chmod +x ${REMOTE_APP_DIR}/deploy/remote-deploy.sh ${REMOTE_APP_DIR}/scripts/ci/post-deploy-check.sh
           TAG="${RESOLVED_TAG:-$BUILD_NUMBER}"
           IMAGE_NAME=${IMAGE_NAME}:alpine-${TAG} \
           REMOTE_APP_DIR=${REMOTE_APP_DIR} \
